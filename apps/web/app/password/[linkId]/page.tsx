@@ -9,7 +9,6 @@ import { notFound, redirect } from "next/navigation";
 import PasswordForm from "./form";
 
 export const dynamic = "force-dynamic";
-export const runtime = "edge";
 
 const title = "Password Required";
 const description =

@@ -31,9 +31,11 @@ const resendEmailForOptions = (
     from: from || VARIANT_TO_FROM_MAP[variant],
     subject: `${subject}${isPreviewEnv && gitBranch ? ` [${gitBranch}]` : ""}`,
     bcc,
-    // if replyTo is set to "noreply@dub.co", don't set replyTo
-    // else set it to the value of replyTo or fallback to support@dub.co
-    ...(replyTo === "noreply" ? {} : { replyTo: replyTo || "support@dub.co" }),
+    // if replyTo is set to "noreply", don't set replyTo
+    // else set it to the value of replyTo or fallback to EMAIL_REPLY_TO/support@dub.co
+    ...(replyTo === "noreply"
+      ? {}
+      : { replyTo: replyTo || process.env.EMAIL_REPLY_TO || "support@dub.co" }),
     scheduledAt,
     tags,
     ...(variant === "marketing"
@@ -41,7 +43,10 @@ const resendEmailForOptions = (
           headers: {
             ...(headers || {}),
             "List-Unsubscribe":
-              unsubscribeUrl || "https://app.dub.co/account/settings",
+            unsubscribeUrl ||
+            (process.env.NEXT_PUBLIC_APP_DOMAIN
+              ? `${process.env.NEXT_PUBLIC_APP_DOMAIN}/account/settings`
+              : "https://app.dub.co/account/settings"),
           },
         }
       : headers && { headers }),

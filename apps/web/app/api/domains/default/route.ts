@@ -1,7 +1,7 @@
 import { withWorkspace } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { getDefaultDomainsQuerySchema } from "@/lib/zod/schemas/domains";
-import { DUB_DOMAINS_ARRAY } from "@dub/utils";
+import { DUB_DOMAINS_ARRAY, SHORT_DOMAIN } from "@dub/utils";
 import { NextResponse } from "next/server";
 import * as z from "zod/v4";
 
@@ -15,14 +15,7 @@ export const GET = withWorkspace(
         projectId: workspace.id,
       },
       select: {
-        dubsh: true,
-        chatgpt: true,
-        sptifi: true,
-        gitnew: true,
-        callink: true,
-        amznid: true,
-        ggllink: true,
-        figpage: true,
+        buxtonslink: true,
       },
     });
 
@@ -48,7 +41,7 @@ export const GET = withWorkspace(
 );
 
 const updateDefaultDomainsSchema = z.object({
-  defaultDomains: z.array(z.enum(DUB_DOMAINS_ARRAY as [string, ...string[]])),
+  defaultDomains: z.array(z.enum([SHORT_DOMAIN] as [string, ...string[]])),
 });
 
 // PATCH /api/domains/default - edit default domains
@@ -63,14 +56,7 @@ export const PATCH = withWorkspace(
         projectId: workspace.id,
       },
       data: {
-        dubsh: defaultDomains.includes("dub.sh"),
-        chatgpt: defaultDomains.includes("chatg.pt"),
-        sptifi: defaultDomains.includes("spti.fi"),
-        gitnew: defaultDomains.includes("git.new"),
-        callink: defaultDomains.includes("cal.link"),
-        amznid: defaultDomains.includes("amzn.id"),
-        ggllink: defaultDomains.includes("ggl.link"),
-        figpage: defaultDomains.includes("fig.page"),
+        buxtonslink: defaultDomains.includes(SHORT_DOMAIN),
       },
     });
 
